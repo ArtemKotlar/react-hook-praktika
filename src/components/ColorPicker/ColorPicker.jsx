@@ -1,25 +1,21 @@
 import { Btn } from './ColorPicker.styled';
-import classNames from 'classnames';
-const { Component } = require('react');
+// import classNames from 'classnames';
+const { PureComponent } = require('react');
 
-class ColorPicker extends Component {
+class ColorPicker extends PureComponent {
   state = {
-    activeOptionIdx: 2,
+    activeOptionIdx: '2',
   };
 
   setActiveIdx = index => {
+    console.log('index: ', index);
     this.setState({ activeOptionIdx: index });
-  };
-
-  makeOptionClassName = index => {
-    return classNames('ColorPicker__options', {
-      ColorPicker__active: index === this.activeOptionIdx,
-    });
   };
 
   render() {
     const { activeOptionIdx } = this.state;
     const { options } = this.props;
+
     const { label } = options[activeOptionIdx];
 
     return (
@@ -30,7 +26,6 @@ class ColorPicker extends Component {
           {options.map(({ label, color }, index) => (
             <Btn
               key={label}
-              className={this.makeOptionClassName(index)}
               style={{ backgroundColor: color }}
               onClick={() => this.setActiveIdx(index)}
             ></Btn>
