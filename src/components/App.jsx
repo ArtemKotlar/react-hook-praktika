@@ -22,6 +22,7 @@ import { Component } from 'react';
 import * as API from 'services/api';
 import { MaterialForm } from './MaterialEditor/MaterialForm';
 import { Materials } from './MaterialEditor/Materials';
+import FormHook from './FormHook/FormHook';
 
 class App extends Component {
   state = {
@@ -124,7 +125,10 @@ class App extends Component {
     } = this.state;
     return (
       <div>
-        <Clock></Clock>
+        <FormHook />
+        <br />
+        <Clock />
+        <br />
         <button type="button" onClick={this.toggleModal}>
           Відкрити модалку
         </button>
