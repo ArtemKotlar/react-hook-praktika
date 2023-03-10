@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { Btn, Item, Wrap } from './Clock.styled';
 
 export default function Clock() {
   const [time, setTime] = useState(() => new Date());
@@ -19,13 +20,13 @@ export default function Clock() {
   };
 
   return (
-    <div>
-      <button onClick={() => setTime(new Date())}>Обновити час</button>
-      <p>Поточний час: {time.toLocaleTimeString()} </p>
-      <button type="button" onClick={stop}>
+    <Wrap>
+      <Btn onClick={() => setTime(new Date())}>Обновити час</Btn>
+      <Item>Поточний час: {time.toLocaleTimeString()} </Item>
+      <Btn type="button" onClick={stop}>
         Зупинити
-      </button>
-    </div>
+      </Btn>
+    </Wrap>
   );
 }
 

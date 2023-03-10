@@ -1,49 +1,54 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import PokemonCart from './PokemonCart';
 import PokemonError from './PokemonError';
 import PokemonPending from './PokemonPending';
 import pokemonAPI from '../../services/pokemon-api';
 
-class PokemonInfo extends Component {
-  state = {
-    pokemon: null,
-    error: null,
-    status: 'idle',
-  };
+const Status = {
+  IDLE: 'idle',
+  PENDING: 'pending',
+  RESOLVED: 'resolved',
+  REJECTED: 'rejected',
+};
 
-  componentDidUpdate(prevProps, prevState) {
-    const prevName = prevProps.pokemonName;
-    const nextName = this.props.pokemonName;
+export default function PokemonInfo({ pokemonName }) {
+  const [pokemon, setPokemon] = useState(null);
+  const [error, setError] = useState(null);
+  const [status, setStatus] = useState(Status.IDLE);
 
-    if (prevName !== nextName) {
-      this.setState({ status: 'pending' });
-
-      pokemonAPI
-        .fetchPokemon(nextName)
-        .then(pokemon => this.setState({ pokemon, status: 'resolved' }))
-        .catch(error => this.setState({ error, status: 'rejected' }));
+  useEffect(() => {
+    // Робимо if (!pokemonName) {return;}  коли перший рендер це пуста строка
+    if (!pokemonName) {
+      return;
     }
+    setStatus(Status.PENDING);
+
+    pokemonAPI
+      .fetchPokemon(pokemonName)
+      .then(pokemon => {
+        // Порядок важливий!!! Спочатку дані а потім статус
+        setPokemon(pokemon);
+        setStatus(Status.RESOLVED);
+      })
+      .catch(error => {
+        setError(error);
+        setStatus(Status.REJECTED);
+      });
+  }, [pokemonName]);
+
+  if (status === Status.IDLE) {
+    return <div>Вкажіть імя пакемона.</div>;
   }
 
-  render() {
-    const { pokemon, error, status } = this.state;
+  if (status === Status.PENDING) {
+    return <PokemonPending pokemonName={pokemonName} />;
+  }
 
-    if (status === 'idle') {
-      return <div>Вкажіть імя пакемона.</div>;
-    }
+  if (status === Status.REJECTED) {
+    return <PokemonError message={error.message} />;
+  }
 
-    if (status === 'pending') {
-      return <PokemonPending />;
-    }
-
-    if (status === 'rejected') {
-      return <PokemonError message={error.message} />;
-    }
-
-    if (status === 'resolved') {
-      return <PokemonCart pokemon={pokemon} />;
-    }
+  if (status === Status.RESOLVED) {
+    return <PokemonCart pokemon={pokemon} />;
   }
 }
-
-export default PokemonInfo;

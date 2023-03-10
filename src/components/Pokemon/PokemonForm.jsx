@@ -1,44 +1,39 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import { ImSearch } from 'react-icons/im';
 import { toast } from 'react-toastify';
 
 const styles = { from: { marginBottom: 20 } };
 
-class PokemonForm extends Component {
-  state = {
-    pokemonName: '',
+export default function PokemonForm({ onSubmit }) {
+  const [pokemonName, setPokemonName] = useState('');
+
+  const handleNameChange = event => {
+    setPokemonName(event.target.value.toLowerCase());
   };
 
-  handleNameChange = e => {
-    this.setState({ pokemonName: e.currentTarget.value.toLowerCase() });
-  };
+  const handleSubmit = event => {
+    event.preventDefault();
 
-  handleSubmit = e => {
-    e.preventDefault();
-
-    if (this.state.pokemonName.trim() === '') {
+    if (pokemonName.trim() === '') {
       toast('Вкажіть імя покемона.');
       return;
     }
 
-    this.props.onSubmit(this.state.pokemonName);
-    this.setState({ pokemonName: '' });
+    onSubmit(pokemonName);
+    setPokemonName('');
   };
-  render() {
-    return (
-      <form onSubmit={this.handleSubmit} style={styles.from}>
-        <input
-          type="text"
-          name="pokemonName"
-          value={this.state.pokemonName}
-          onChange={this.handleNameChange}
-        />
-        <button type="submit">
-          <ImSearch /> Найти
-        </button>
-      </form>
-    );
-  }
-}
 
-export default PokemonForm;
+  return (
+    <form onSubmit={handleSubmit} style={styles.from}>
+      <input
+        type="text"
+        name="pokemonName"
+        value={pokemonName}
+        onChange={handleNameChange}
+      />
+      <button type="submit">
+        <ImSearch /> Найти
+      </button>
+    </form>
+  );
+}

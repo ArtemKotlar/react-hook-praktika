@@ -9,5 +9,3 @@ export { default as Clock } from './Clock/Clock';
 export { default as Reader } from './Reader/Reader';
 export { default as VideoList } from './Player/VideoList';
 export { default as Player } from './Player/Player';
-export { default as PokemonForm } from './Pokemon/PokemonForm';
-export { default as PokemonInfo } from './Pokemon/PokemonInfo';
